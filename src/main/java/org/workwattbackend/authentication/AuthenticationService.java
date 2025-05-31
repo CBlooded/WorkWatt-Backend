@@ -57,7 +57,6 @@ public class AuthenticationService {
         if (userRepository.findByEmail(request.getEmail()).isPresent())
             throw new RuntimeException();
 
-
         var user = UserEntity
             .builder()
             .id(UUID.randomUUID().toString())

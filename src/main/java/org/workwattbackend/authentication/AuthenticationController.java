@@ -8,6 +8,9 @@ import org.workwattbackend.authentication.entities.AuthenticationRequest;
 import org.workwattbackend.authentication.entities.AuthenticationResponse;
 import org.workwattbackend.authentication.entities.RegisterRequest;
 
+/**
+ * The type Authentication controller.
+ */
 @Slf4j
 @RestController
 @CrossOrigin
@@ -16,11 +19,23 @@ import org.workwattbackend.authentication.entities.RegisterRequest;
 public class AuthenticationController {
     private final AuthenticationService service;
 
+    /**
+     * Authenticate response entity.
+     *
+     * @param request the request
+     * @return the response entity
+     */
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
+    /**
+     * Register response entity.
+     *
+     * @param request the request
+     * @return the response entity
+     */
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody RegisterRequest request) {
         service.register(request);
