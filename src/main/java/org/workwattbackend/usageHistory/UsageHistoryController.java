@@ -12,7 +12,6 @@ import org.workwattbackend.user.UserRepository;
 @RestController
 @RequiredArgsConstructor
 public class UsageHistoryController {
-    private final UserRepository userRepository;
     private final UsageHistoryService usageService;
 
     @GetMapping("/usageHistory")
