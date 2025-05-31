@@ -77,11 +77,7 @@ public class UserService {
 
     public boolean isTempPasswordValid(String userId, String tempPassword) {
         var user = repository.findById(userId).orElseThrow(UserNotFoundException::new);
-        if (encoder.matches(user.getPassword(), encoder.encode(tempPassword))) {
-            log.info("Correct");
-            return true;
-        }
-        return false;
+        return encoder.matches(tempPassword, user.getPassword());
     }
 
     private void sentAccountConfirmationMail(String temporaryPassword, ActivationHostEntity host) throws MessagingException, UserNotFoundException {
