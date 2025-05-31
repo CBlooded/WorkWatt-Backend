@@ -20,4 +20,9 @@ public class ExceptionHandlerService {
     public ResponseEntity<String> handleCustomExceptions(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(NoFreeComputersException.class)
+    public ResponseEntity<String> handleNoFreeComputersException(NoFreeComputersException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }
