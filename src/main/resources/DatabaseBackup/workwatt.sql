@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 31 Maj 2025, 14:16
+-- Czas generowania: 31 Maj 2025, 18:13
 -- Wersja serwera: 10.4.27-MariaDB
 -- Wersja PHP: 8.0.25
 
@@ -34,7 +34,7 @@ CREATE TABLE `computer` (
   `id` int(11) NOT NULL,
   `name` varchar(250) NOT NULL,
   `user_id` varchar(36) NOT NULL,
-  `consuption` float NOT NULL
+  `consumption` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -61,7 +61,7 @@ CREATE TABLE `usage_history` (
   `id` int(11) NOT NULL,
   `user_id` varchar(36) NOT NULL,
   `start` datetime NOT NULL,
-  `stop` datetime NOT NULL,
+  `stop` datetime DEFAULT NULL,
   `computer_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -77,10 +77,17 @@ CREATE TABLE `users` (
   `email` varchar(250) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` int(11) NOT NULL,
-  `firstName` varchar(250) NOT NULL,
-  `lastName` varchar(250) NOT NULL,
+  `first_name` varchar(250) NOT NULL,
+  `last_name` varchar(250) NOT NULL,
   `enabled` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Zrzut danych tabeli `users`
+--
+
+INSERT INTO `users` (`id`, `email`, `password`, `role`, `first_name`, `last_name`, `enabled`) VALUES
+('256a8dd8-7f1a-4dcc-b124-3e7e4d0f8e20', 'email@example.com', '$2a$10$d5Kp/WKeHmUreF6NKUJoR.OoCjsyvvi4k6p9YL/s0gsBxzzfI4CNu', 0, 'fName', 'lName', 1);
 
 --
 -- Indeksy dla zrzutów tabel
