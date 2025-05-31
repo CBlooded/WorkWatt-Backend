@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.workwattbackend.computer.dto.NewComputerDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ComputerEntityRepository extends JpaRepository<ComputerEntity, Long> {
 
@@ -14,5 +15,5 @@ public interface ComputerEntityRepository extends JpaRepository<ComputerEntity, 
             "GROUP BY c.name, c.consumption")
     List<NewComputerDto> findFreeComputers();
 
-    ComputerEntity findFirstByNameOrderByIdAsc(String name);
+    Optional<ComputerEntity> findFirstByNameAndUserIdIsNullOrderByIdAsc(String name);
 }

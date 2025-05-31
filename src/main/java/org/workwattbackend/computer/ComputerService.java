@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.workwattbackend.computer.dto.NewComputerDto;
 import org.workwattbackend.computer.dto.UserDto;
+import org.workwattbackend.exception.ComputerNotPoweredOnException;
+import org.workwattbackend.exception.NoFreeComputersException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +29,16 @@ public class ComputerService {
         computerRepository.saveAll(comps);
     }
 
-    public List<NewComputerDto> getFreeComputers() {
-        return computerRepository.findFreeComputers();
+    public List<NewComputerDto> getFreeComputers(){
+        var freeComputers = computerRepository.findFreeComputers();
+        if (freeComputers.isEmpty())
+            throw new NoFreeComputersException();
+        return freeComputers;
     }
 
     @Transactional
     public void assignUser(UserDto userDto){
-        ComputerEntity comp = computerRepository.findFirstByNameOrderByIdAsc(userDto.getComputerName());
+        ComputerEntity comp = computerRepository.findFirstByNameAndUserIdIsNullOrderByIdAsc(userDto.getComputerName()).orElseThrow(NoFreeComputersException::new);
         comp.setUserId(userDto.getUserId());
     }
 }
