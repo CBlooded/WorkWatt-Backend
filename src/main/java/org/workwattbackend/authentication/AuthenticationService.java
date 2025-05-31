@@ -49,7 +49,12 @@ public class AuthenticationService {
         if (user.isEmpty())
             throw new UserNotFoundException();
 
-
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                request.getEmail(),
+                request.getPassword()
+            )
+        );
 
 
         /*TODO

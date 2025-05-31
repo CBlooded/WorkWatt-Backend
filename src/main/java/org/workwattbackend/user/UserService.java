@@ -77,8 +77,7 @@ public class UserService {
 
     public boolean isTempPasswordValid(String userId, String tempPassword) {
         var user = repository.findById(userId).orElseThrow(UserNotFoundException::new);
-        var encodedTempPassword = encoder.encode(tempPassword);
-        if (Objects.equals(user.getPassword(), encodedTempPassword)) {
+        if (encoder.matches(user.getPassword(), tempPassword)) {
             log.info("Correct");
             return true;
         }
