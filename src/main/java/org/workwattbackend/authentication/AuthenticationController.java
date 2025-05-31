@@ -1,5 +1,6 @@
 package org.workwattbackend.authentication;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class AuthenticationController {
      * @return the response entity
      */
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<Void> register(@RequestBody RegisterRequest request) throws MessagingException {
         service.register(request);
         return ResponseEntity.ok().build();
     }
