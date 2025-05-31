@@ -1,10 +1,10 @@
-package org.workwattbackend.authorization;
+package org.workwattbackend.authentication;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.workwattbackend.authorization.entities.AuthenticationRequest;
-import org.workwattbackend.authorization.entities.AuthenticationResponse;
-import org.workwattbackend.authorization.entities.RegisterRequest;
+import org.workwattbackend.authentication.entities.AuthenticationRequest;
+import org.workwattbackend.authentication.entities.AuthenticationResponse;
+import org.workwattbackend.authentication.entities.RegisterRequest;
 
 @RestController
 @CrossOrigin

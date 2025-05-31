@@ -1,4 +1,4 @@
-package org.workwattbackend.authorization.entities;
+package org.workwattbackend.authentication.entities;
 
 
 import lombok.Data;
