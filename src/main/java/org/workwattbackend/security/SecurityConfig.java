@@ -1,4 +1,4 @@
-package org.workwattbackend.security.config;
+package org.workwattbackend.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

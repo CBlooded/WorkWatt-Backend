@@ -12,4 +12,14 @@ public enum Role {
         this.value = value;
     }
 
+    public static Role findByValue(int value) {
+        for (var r : Role.values()) {
+            if (r.value == value)
+                return r;
+        }
+        return null;
+    }
+
 }
+
+
