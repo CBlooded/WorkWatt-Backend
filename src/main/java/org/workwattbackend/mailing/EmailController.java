@@ -1,4 +1,4 @@
-package org.workwattbackend.mailing.model;
+package org.workwattbackend.mailing;
 
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.workwattbackend.mailing.EmailService;
+import org.workwattbackend.mailing.model.EmailData;
 
 @RestController
 @CrossOrigin
@@ -16,6 +16,7 @@ import org.workwattbackend.mailing.EmailService;
 public class EmailController {
     private final EmailService service;
 
+    //TODO TEMP
     @GetMapping
     public ResponseEntity<Void> sendTestMail() throws MessagingException {
         service.sendMail(

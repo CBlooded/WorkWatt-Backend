@@ -1,5 +1,6 @@
 package org.workwattbackend.authentication;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,9 +10,11 @@ import org.springframework.stereotype.Service;
 import org.workwattbackend.authentication.entities.AuthenticationRequest;
 import org.workwattbackend.authentication.entities.AuthenticationResponse;
 import org.workwattbackend.authentication.entities.RegisterRequest;
+import org.workwattbackend.mailing.EmailController;
 import org.workwattbackend.user.Role;
 import org.workwattbackend.user.UserEntity;
 import org.workwattbackend.user.UserRepository;
+import org.workwattbackend.user.UserService;
 
 import java.util.UUID;
 
@@ -22,6 +25,9 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder encoder;
+    private final EmailController emailController;
+    private final UserService userService;
+    //TODO call method for mail
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var user = userRepository.findByEmail(request.getEmail());
@@ -52,26 +58,26 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().token("1234").build();
     }
 
-    public void register(RegisterRequest request) {
-        //TODO if user exists throw
+    public void register(RegisterRequest request) throws MessagingException {
         if (userRepository.findByEmail(request.getEmail()).isPresent())
-            throw new RuntimeException();
+            throw new RuntimeException(); // TODO change to custom
+
+        String temporaryPassword = generateTemporaryPassword();
 
         var user = UserEntity
             .builder()
             .id(UUID.randomUUID().toString())
             .email(request.getEmail())
-            .password(encoder.encode(generateTemporaryPassword()))
+            .password(encoder.encode(temporaryPassword))
             .firstName(request.getFirstName())
             .lastName(request.getLastName())
             .role(Role.findByValue(request.getRole()))
             .enabled(false)
             .build();
-
         userRepository.save(user);
 
+        userService.generateHostAndSendMail(user, temporaryPassword);
 
-        //todo send mail to user to change password
     }
 
     private String generateTemporaryPassword() {
