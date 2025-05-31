@@ -20,5 +20,4 @@ public class ActivationHostEntity {
     private String id;
     @Column(name = "user_id")
     private String userId;
-    private Date expiration;
 }

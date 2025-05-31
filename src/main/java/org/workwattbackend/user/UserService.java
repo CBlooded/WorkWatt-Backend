@@ -39,10 +39,7 @@ public class UserService {
      * @throws MessagingException the messaging exception
      */
     public void generateHostAndSendMail(UserEntity user, String temporaryPassword) throws MessagingException {
-        Calendar expirationTime = Calendar.getInstance();
-        expirationTime.add(Calendar.MINUTE, 10);
-
-        var host = ActivationHostEntity.builder().id(UUID.randomUUID().toString()).userId(user.getId()).expiration(expirationTime.getTime()).build();
+        var host = ActivationHostEntity.builder().id(UUID.randomUUID().toString()).userId(user.getId()).build();
 
         hostRepository.save(host);
 
