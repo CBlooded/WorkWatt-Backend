@@ -49,20 +49,7 @@ public class AuthenticationService {
         if (user.isEmpty())
             throw new UserNotFoundException();
 
-        try {
-            authenticationManager
-                .authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                    )
-                );
-        } catch (DisabledException de) {
-            throw new AccountNotActivatedException();
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return null;
-        }
+
 
 
         /*TODO

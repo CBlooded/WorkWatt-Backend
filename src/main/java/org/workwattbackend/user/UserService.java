@@ -15,6 +15,7 @@ import org.workwattbackend.user.activationHost.ActivationHostEntity;
 import org.workwattbackend.user.activationHost.ActivationHostRepository;
 
 import java.util.Calendar;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -73,6 +74,20 @@ public class UserService {
         return userRepository.findById(host.getUserId()).orElseThrow(UserNotFoundException::new);
     }
 
+    public boolean isHostIdValid(String hostId) {
+        return hostRepository.findById(hostId).isPresent();
+    }
+
+    public boolean isTempPasswordValid(String userId, String tempPassword) {
+        var user = repository.findById(userId).orElseThrow(UserNotFoundException::new);
+        var encodedTempPassword = encoder.encode(tempPassword);
+        if (Objects.equals(user.getPassword(), encodedTempPassword)) {
+            log.info("Correct");
+            return true;
+        }
+        return false;
+    }
+
     private void sentAccountConfirmationMail(String temporaryPassword, ActivationHostEntity host) throws MessagingException, UserNotFoundException {
         var user = repository.findById(host.getUserId()).orElseThrow(UserNotFoundException::new);
 
@@ -80,5 +95,6 @@ public class UserService {
 
         emailService.sendMail(mailBody);
     }
+
 
 }

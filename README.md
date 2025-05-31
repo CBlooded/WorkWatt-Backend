@@ -42,5 +42,13 @@ Params:
     - n: new password [String]- ustawione hasło użytkownika
 ```
 
+### 2. `GET /api/v1/user/password/host/validate?h=...&t=...`
+
+```
+    Params:
+        - h: hostId [String] - id hosta aktywacji
+        - t: tempPassword [String] - hasło tymczasowe 
+```
+
 ## Database diagram:
 
