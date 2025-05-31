@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import org.workwattbackend.exception.HostNotFoundException;
 import org.workwattbackend.exception.UserNotFoundException;
 
+import java.util.Map;
+import java.util.Objects;
+
 /**
  * The type User controller.
  */
@@ -20,14 +23,13 @@ public class UserController {
     /**
      * Sets user password and activate account.
      *
-     * @param hostId      the host id
-     * @param newPassword the new password
+     * @param payload the payload
      * @return the user password and activate account
      */
     @PostMapping("/password/set")
-    public ResponseEntity<Void> setUserPasswordAndActivateAccount(@RequestParam(name = "h") String hostId, @RequestParam(name = "n") String newPassword) {
-        var user = service.getUserFromHostId(hostId);
-        service.changePasswordAndActivate(user.getId(), newPassword);
+    public ResponseEntity<Void> setUserPasswordAndActivateAccount(@RequestBody Map<String, String> payload) {
+        var user = service.getUserFromHostId(payload.get("hostId"));
+        service.changePasswordAndActivate(user.getId(), payload.get("newPassword"));
         return ResponseEntity.ok().build();
     }
 

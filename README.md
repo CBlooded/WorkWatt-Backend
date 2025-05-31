@@ -36,10 +36,11 @@ Służy do rejestrowania nowego użytkownika.
 
 ### 1. `POST /api/v1/user/password/set?h=...&n=...`
 
-```
-Params: 
-    - h: hostId [String] - id hosta aktywacji
-    - n: new password [String]- ustawione hasło użytkownika
+```json
+{
+  "hostId": "a1b2c3",
+  "newPassword": "abc"
+}
 ```
 
 ### 2. `GET /api/v1/user/password/host/validate?h=...&t=...`
