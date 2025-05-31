@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.workwattbackend.exception.HostNotFoundException;
+import org.workwattbackend.exception.UserAlreadyExistsException;
+import org.workwattbackend.exception.UserNotFoundException;
 import org.workwattbackend.mailing.EmailService;
 import org.workwattbackend.mailing.model.EmailData;
 import org.workwattbackend.mailing.model.HttpMailBody;
@@ -52,8 +55,8 @@ public class UserService {
      * @param userId      the user id
      * @param newPassword the new password
      */
-    public void changePasswordAndActivate(String userId, String newPassword) {
-        var user = repository.findById(userId).orElseThrow(RuntimeException::new); //TODO change to custom exception
+    public void changePasswordAndActivate(String userId, String newPassword) throws UserNotFoundException {
+        var user = repository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.setPassword(encoder.encode(newPassword));
         user.setEnabled(true);
         repository.save(user);
@@ -65,13 +68,13 @@ public class UserService {
      * @param hostId the host id
      * @return the user from host id
      */
-    public UserEntity getUserFromHostId(String hostId) {
-        var host = hostRepository.findById(hostId).orElseThrow(RuntimeException::new);//TODO change to custom
-        return userRepository.findById(host.getUserId()).orElseThrow(RuntimeException::new);//TODO change to custom
+    public UserEntity getUserFromHostId(String hostId) throws HostNotFoundException, UserNotFoundException {
+        var host = hostRepository.findById(hostId).orElseThrow(HostNotFoundException::new);
+        return userRepository.findById(host.getUserId()).orElseThrow(UserNotFoundException::new);
     }
 
-    private void sentAccountConfirmationMail(String temporaryPassword, ActivationHostEntity host) throws MessagingException {
-        var user = repository.findById(host.getUserId()).orElseThrow(RuntimeException::new); //TODO change to custom exception
+    private void sentAccountConfirmationMail(String temporaryPassword, ActivationHostEntity host) throws MessagingException, UserNotFoundException {
+        var user = repository.findById(host.getUserId()).orElseThrow(UserNotFoundException::new);
 
         var mailBody = EmailData.builder().to(user.getEmail()).subject("WorkWatt: Activate your account").htmlBody(HttpMailBody.getActivationMail(user, temporaryPassword, host.getId())).build();
 

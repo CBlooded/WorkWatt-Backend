@@ -4,12 +4,16 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.workwattbackend.authentication.entities.AuthenticationRequest;
 import org.workwattbackend.authentication.entities.AuthenticationResponse;
 import org.workwattbackend.authentication.entities.RegisterRequest;
+import org.workwattbackend.exception.AccountNotActivatedException;
+import org.workwattbackend.exception.UserAlreadyExistsException;
+import org.workwattbackend.exception.UserNotFoundException;
 import org.workwattbackend.mailing.EmailController;
 import org.workwattbackend.user.Role;
 import org.workwattbackend.user.UserEntity;
@@ -18,6 +22,9 @@ import org.workwattbackend.user.UserService;
 
 import java.util.UUID;
 
+/**
+ * The type Authentication service.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -27,40 +34,54 @@ public class AuthenticationService {
     private final PasswordEncoder encoder;
     private final EmailController emailController;
     private final UserService userService;
-    //TODO call method for mail
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    /**
+     * Authenticate authentication response.
+     *
+     * @param request the request
+     * @return the authentication response
+     * @throws UserNotFoundException        the user not found exception
+     * @throws AccountNotActivatedException the account not activated exception
+     */
+    public AuthenticationResponse authenticate(AuthenticationRequest request) throws UserNotFoundException, AccountNotActivatedException {
         var user = userRepository.findByEmail(request.getEmail());
-        if (user.isEmpty())
-            throw new RuntimeException();
 
-        log.info("Request: {} {}", request.getEmail(), request.getPassword());
+        if (user.isEmpty())
+            throw new UserNotFoundException();
 
         try {
             authenticationManager
                 .authenticate(
                     new UsernamePasswordAuthenticationToken(
-                        request.getEmail(), //ArJAq9
+                        request.getEmail(),
                         request.getPassword()
                     )
                 );
+        } catch (DisabledException de) {
+            throw new AccountNotActivatedException();
         } catch (Exception e) {
-            //TODO exception account blocked
-            //
             log.error(e.getMessage());
-            throw new RuntimeException();
+            return null;
         }
 
+
         /*TODO
-           Exception user not found
            generate token
          */
+
         return AuthenticationResponse.builder().token("1234").build();
     }
 
-    public void register(RegisterRequest request) throws MessagingException {
+    /**
+     * Register.
+     *
+     * @param request the request
+     * @throws MessagingException         the messaging exception
+     * @throws UserAlreadyExistsException the user already exists exception
+     */
+    public void register(RegisterRequest request) throws MessagingException, UserAlreadyExistsException {
         if (userRepository.findByEmail(request.getEmail()).isPresent())
-            throw new RuntimeException(); // TODO change to custom
+            throw new UserAlreadyExistsException();
 
         String temporaryPassword = generateTemporaryPassword();
 

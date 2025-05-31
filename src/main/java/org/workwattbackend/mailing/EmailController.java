@@ -16,17 +16,4 @@ import org.workwattbackend.mailing.model.EmailData;
 public class EmailController {
     private final EmailService service;
 
-    //TODO TEMP
-    @GetMapping
-    public ResponseEntity<Void> sendTestMail() throws MessagingException {
-        service.sendMail(
-            EmailData
-                .builder()
-                .to("mikiflor24@gmail.com")
-                .subject("test")
-                .htmlBody("<h1>Hello</h1>")
-                .build()
-        );
-        return ResponseEntity.ok().build();
-    }
 }
