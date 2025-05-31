@@ -8,18 +8,20 @@
 
 Służy do uwierzytelniania istniejącego użytkownika (logowanie).
 
-####  Request body
+#### Request body
+
 ```json
 {
   "email": "user@example.com",
   "password": "yourPassword123"
 }
 ```
+
 ### 2. `POST /api/v1/auth/register`
 
 Służy do rejestrowania nowego użytkownika.
 
-####  Request body
+#### Request body
 
 ```json
 {
@@ -29,6 +31,16 @@ Służy do rejestrowania nowego użytkownika.
   "role": 0
 }
 ```
+
+### Account activation:
+
+### 1. `POST /api/v1/user/password/set?h=...&n=...`
+
+```
+Params: 
+    - h: hostId [String] - id hosta aktywacji
+    - n: new password [String]- ustawione hasło użytkownika
+```
+
 ## Database diagram:
 
-![img_2.png](img_2.png)
