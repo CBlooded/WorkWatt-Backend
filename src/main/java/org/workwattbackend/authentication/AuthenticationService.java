@@ -54,7 +54,7 @@ public class AuthenticationService {
 
     public void register(RegisterRequest request) {
         //TODO if user exists throw
-        if (userRepository.findByEmail(request.getEmail()).isEmpty())
+        if (userRepository.findByEmail(request.getEmail()).isPresent())
             throw new RuntimeException();
 
 
