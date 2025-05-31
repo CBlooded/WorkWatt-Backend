@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 31 Maj 2025, 17:16
--- Wersja serwera: 10.4.27-MariaDB
--- Wersja PHP: 8.0.25
+-- Generation Time: Cze 01, 2025 at 01:50 AM
+-- Wersja serwera: 10.4.32-MariaDB
+-- Wersja PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,10 +18,30 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Baza danych: `workwatt`
+-- Database: `workwatt`
 --
 CREATE DATABASE IF NOT EXISTS `workwatt` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `workwatt`;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `activation_host`
+--
+
+DROP TABLE IF EXISTS `activation_host`;
+CREATE TABLE `activation_host` (
+  `id` varchar(36) NOT NULL,
+  `user_id` varchar(36) NOT NULL,
+  `expiration` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `activation_host`
+--
+
+INSERT INTO `activation_host` (`id`, `user_id`, `expiration`) VALUES
+('b95261f4-510b-4d33-bf2c-8957875081c0', 'df5760f7-5737-4323-bd08-feba669524fa', '2025-06-01 00:32:02');
 
 -- --------------------------------------------------------
 
@@ -33,9 +53,22 @@ DROP TABLE IF EXISTS `computer`;
 CREATE TABLE `computer` (
   `id` int(11) NOT NULL,
   `name` varchar(250) NOT NULL,
-  `user_id` varchar(36) NOT NULL,
+  `user_id` varchar(36) DEFAULT NULL,
   `consumption` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `computer`
+--
+
+INSERT INTO `computer` (`id`, `name`, `user_id`, `consumption`) VALUES
+(1, 'TestComp', 'df5760f7-5737-4323-bd08-feba669524fa', 200),
+(2, 'TestComp3000', 'df5760f7-5737-4323-bd08-feba669524fa', 250),
+(3, 'TestComp3000', 'df5760f7-5737-4323-bd08-feba669524fa', 250),
+(4, 'TestComp3000', 'df5760f7-5737-4323-bd08-feba669524fa', 250),
+(5, 'TestComp3000', 'df5760f7-5737-4323-bd08-feba669524fa', 250),
+(6, 'TestComp3000', 'df5760f7-5737-4323-bd08-feba669524fa', 250),
+(7, 'TestComp3000', 'df5760f7-5737-4323-bd08-feba669524fa', 250);
 
 -- --------------------------------------------------------
 
@@ -83,8 +116,21 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `email`, `password`, `role`, `first_name`, `last_name`, `enabled`) VALUES
+('df5760f7-5737-4323-bd08-feba669524fa', 'test@ex.com', '$2a$10$KvlR6I7Hy6WVWGhG5Ah2XOpS4jy33V7JV/d9aaVYTbHeRXrEmBTSy', 0, 'test', 'tester', 0);
+
+--
 -- Indeksy dla zrzutów tabel
 --
+
+--
+-- Indeksy dla tabeli `activation_host`
+--
+ALTER TABLE `activation_host`
+  ADD KEY `fk_acitvationHost_user` (`user_id`);
 
 --
 -- Indeksy dla tabeli `computer`
@@ -116,46 +162,52 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT dla zrzuconych tabel
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT dla tabeli `computer`
+-- AUTO_INCREMENT for table `computer`
 --
 ALTER TABLE `computer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT dla tabeli `hierarchy`
+-- AUTO_INCREMENT for table `hierarchy`
 --
 ALTER TABLE `hierarchy`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT dla tabeli `usage_history`
+-- AUTO_INCREMENT for table `usage_history`
 --
 ALTER TABLE `usage_history`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Ograniczenia dla zrzutów tabel
+-- Constraints for dumped tables
 --
 
 --
--- Ograniczenia dla tabeli `computer`
+-- Constraints for table `activation_host`
+--
+ALTER TABLE `activation_host`
+  ADD CONSTRAINT `fk_acitvationHost_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `computer`
 --
 ALTER TABLE `computer`
   ADD CONSTRAINT `computer_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ograniczenia dla tabeli `hierarchy`
+-- Constraints for table `hierarchy`
 --
 ALTER TABLE `hierarchy`
   ADD CONSTRAINT `hierarchy_ibfk_1` FOREIGN KEY (`supervisor_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `hierarchy_ibfk_2` FOREIGN KEY (`subordinate_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Ograniczenia dla tabeli `usage_history`
+-- Constraints for table `usage_history`
 --
 ALTER TABLE `usage_history`
   ADD CONSTRAINT `usage_history_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
