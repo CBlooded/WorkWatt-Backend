@@ -5,14 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.workwattbackend.usageHistory.dto.ComputerDto;
-import org.workwattbackend.user.UserRepository;
+import org.workwattbackend.user.UserService;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The type Usage history controller.
@@ -21,8 +20,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/usage")
 @RequiredArgsConstructor
+@CrossOrigin
 public class UsageHistoryController {
     private final UsageHistoryService usageService;
+    private final UserService userService;
 
     /**
      * Get usage history response entity.
@@ -33,13 +34,13 @@ public class UsageHistoryController {
      * @return the response entity
      */
     @GetMapping("/history")
-    public ResponseEntity<List<UsageHistoryEntity>> getUsageHistoryForSingleUSer(@RequestParam(name = "s") String start, @RequestParam(name = "e") String end, @RequestParam(name = "u") String userId) {
+    public ResponseEntity<Map<String, List<String>>> getUsageHistoryForSingleUSer(@RequestParam(name = "s") String start, @RequestParam(name = "e") String end, @RequestParam(name = "u") String userId) {
         Instant startMilis = Instant.ofEpochMilli(Long.parseLong(start));
         Instant stopMilis = Instant.ofEpochMilli(Long.parseLong(end));
 
-
-        var list = usageService.getUserUsageHistory(LocalDateTime.ofInstant(startMilis, ZoneId.systemDefault()), LocalDateTime.ofInstant(stopMilis, ZoneId.systemDefault()), userId);
+        var list = usageService.getUserUsageHistoryChartData(LocalDateTime.ofInstant(startMilis, ZoneId.systemDefault()), LocalDateTime.ofInstant(stopMilis, ZoneId.systemDefault()), userId);
         if (list.isEmpty()) return ResponseEntity.noContent().build();
+
         return ResponseEntity.ok(list);
     }
 

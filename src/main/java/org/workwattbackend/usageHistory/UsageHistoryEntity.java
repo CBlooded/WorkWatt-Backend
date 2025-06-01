@@ -18,7 +18,7 @@ public class UsageHistoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String user_id;
-    private Date start;
-    private Date stop;
+    private LocalDateTime start;
+    private LocalDateTime stop;
     private long computerId;
 }
