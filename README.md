@@ -51,5 +51,51 @@ Służy do rejestrowania nowego użytkownika.
         - t: tempPassword [String] - hasło tymczasowe 
 ```
 
+### Computer:
+
+### 1. `POST /api/v1/computer/addComputers`
+
+```json
+{
+  "name": "Comp1",
+  "consumption": 21.2,
+  "amount": 0
+}
+```
+
+### 2. `GET /api/v1/computer/getFreeComputers`
+
+### 3. `POST /api/v1/computer/assignUser`
+
+```json
+{
+  "userId": "aaa-bbb-ccc",
+  "computerName": "Comp1"
+}
+```
+
+### Usage Controller
+
+### 1. `GET /api/v1/usage/history?s=...&e=...&u=...`
+
+```
+Params:
+- s: String - czas startu w milisekundach (epoch millis)
+- e: String - czas końca w milisekundach (epoch millis)
+- u: String - userId (ID użytkownika)
+```
+
+### 2. `GET /api/v1/usage/supervisor/history?s=...&e=...&supervisor=...`
+```
+Params:
+    - s: String - czas startu w milisekundach (epoch millis)
+    - e: String - czas końca w milisekundach (epoch millis)
+    - supervisor: String - ID supervisor'a
+```
+
+### 3. `POST /api/v1/usage/startWork`
+
+### 4. `POST /api/v1/usage/endWork`
+
 ## Database diagram:
 

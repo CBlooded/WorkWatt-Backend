@@ -44,6 +44,37 @@ public class UsageHistoryController {
         return ResponseEntity.ok(list);
     }
 
+
+    /**
+     * Gets usage history for supervisor.
+     *
+     * @param start        the start
+     * @param end          the end
+     * @param supervisorId the supervisor id
+     * @return the usage history for supervisor
+     */
+    @GetMapping("/supervisor/history")
+    public ResponseEntity<Map<String, List<String>>> getUsageHistoryForSupervisor(
+        @RequestParam(name = "s") String start,
+        @RequestParam(name = "e") String end,
+        @RequestParam(name = "supervisor") String supervisorId) {
+
+        Instant startMillis = Instant.ofEpochMilli(Long.parseLong(start));
+        Instant stopMillis = Instant.ofEpochMilli(Long.parseLong(end));
+
+        LocalDateTime startDateTime = LocalDateTime.ofInstant(startMillis, ZoneId.systemDefault());
+        LocalDateTime stopDateTime = LocalDateTime.ofInstant(stopMillis, ZoneId.systemDefault());
+
+        Map<String, List<String>> chartData = usageService.getSupervisorUsageChart(startDateTime, stopDateTime, supervisorId);
+
+        if (chartData == null || chartData.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(chartData);
+    }
+
+
     /**
      * Start work response entity.
      *
