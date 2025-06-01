@@ -74,7 +74,7 @@ public class UsageHistoryController {
         return ResponseEntity.ok(chartData);
     }
 
-    @GetMapping("/supervisor/history/group")
+    @GetMapping("/supervisor/history/summed")
     public ResponseEntity<Map<String, List<String>>> getUsageHistoryForSupervisorGrouped(
         @RequestParam(name = "s") String start,
         @RequestParam(name = "e") String end,
