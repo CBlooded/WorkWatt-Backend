@@ -16,8 +16,8 @@ public interface UsageHistoryRepository extends JpaRepository<UsageHistoryEntity
 
     @Query("SELECT u FROM UsageHistoryEntity u WHERE u.start >= :start AND u.stop <= :stop AND u.user_id = :userId")
     List<UsageHistoryEntity> findByDateRangeAndUser(
-        @Param("start") Date start,
-        @Param("stop") Date stop,
+        @Param("start") LocalDateTime start,
+        @Param("stop") LocalDateTime stop,
         @Param("userId") String userId
     );
 }

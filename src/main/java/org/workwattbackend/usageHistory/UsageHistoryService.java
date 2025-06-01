@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.workwattbackend.exception.ComputerNotPoweredOnException;
 import org.workwattbackend.usageHistory.dto.ComputerDto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 public class UsageHistoryService {
     private final UsageHistoryRepository historyRepository;
 
-    public List<UsageHistoryEntity> getUserUsageHistory(Date start, Date stop, String userId) {
+    public List<UsageHistoryEntity> getUserUsageHistory(LocalDateTime start, LocalDateTime stop, String userId) {
         return historyRepository.findByDateRangeAndUser(start, stop, userId);
     }
 

@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import org.workwattbackend.usageHistory.dto.ComputerDto;
 import org.workwattbackend.user.UserRepository;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -32,9 +34,11 @@ public class UsageHistoryController {
      */
     @GetMapping("/history")
     public ResponseEntity<List<UsageHistoryEntity>> getUsageHistoryForSingleUSer(@RequestParam(name = "s") String start, @RequestParam(name = "e") String end, @RequestParam(name = "u") String userId) {
-        long startMilis = Long.parseLong(start);
-        long stopMilis = Long.parseLong(end);
-        var list = usageService.getUserUsageHistory(new Date(startMilis), new Date(stopMilis), userId);
+        Instant startMilis = Instant.ofEpochMilli(Long.parseLong(start));
+        Instant stopMilis = Instant.ofEpochMilli(Long.parseLong(end));
+
+
+        var list = usageService.getUserUsageHistory(LocalDateTime.ofInstant(startMilis, ZoneId.systemDefault()), LocalDateTime.ofInstant(stopMilis, ZoneId.systemDefault()), userId);
         if (list.isEmpty()) return ResponseEntity.noContent().build();
         return ResponseEntity.ok(list);
     }
