@@ -3,7 +3,11 @@ package org.workwattbackend.usageHistory;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.workwattbackend.computer.ComputerEntity;
+import org.workwattbackend.computer.ComputerEntityRepository;
+import org.workwattbackend.computer.ComputerService;
 import org.workwattbackend.exception.ComputerNotPoweredOnException;
+import org.workwattbackend.exception.UserNotOwnerOfComputerException;
 import org.workwattbackend.usageHistory.dto.ComputerDto;
 
 import java.time.LocalDateTime;
@@ -12,9 +16,15 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class UsageHistoryService {
     private final UsageHistoryRepository historyRepository;
+    private final ComputerEntityRepository computerRepository;
 
     @Transactional
     public void startWork(ComputerDto computerDto){
+
+        ComputerEntity computer = computerRepository.findById(computerDto.getComputerId()).orElseThrow();
+        if(!computer.getUserId().equals(computerDto.getUserId()))
+            throw new UserNotOwnerOfComputerException();
+
         UsageHistoryEntity history = UsageHistoryEntity.builder()
                 .user_id(computerDto.getUserId())
                 .start(LocalDateTime.now())

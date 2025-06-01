@@ -25,4 +25,9 @@ public class ExceptionHandlerService {
     public ResponseEntity<String> handleNoFreeComputersException(NoFreeComputersException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(UserNotOwnerOfComputerException.class)
+    public ResponseEntity<String> handleNoFreeComputersException(UserNotOwnerOfComputerException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
 }
