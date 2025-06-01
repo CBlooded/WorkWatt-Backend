@@ -123,6 +123,7 @@ public class UsageHistoryController {
     @PostMapping("/desktop/startWork")
     public ResponseEntity<Void> startWork(@RequestBody ComputerDto computerDto) {
         usageService.startWork(computerDto);
+        log.info("Praca start");
         return ResponseEntity.ok().build();
     }
 
