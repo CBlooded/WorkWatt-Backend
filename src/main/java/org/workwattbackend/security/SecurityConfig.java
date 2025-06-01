@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.workwattbackend.security.config.JwtAuthentication;
 
-@EnableWebSecurity
+//@EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
