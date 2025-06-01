@@ -7,6 +7,7 @@ import org.workwattbackend.computer.ComputerEntity;
 import org.workwattbackend.computer.ComputerEntityRepository;
 import org.workwattbackend.exception.ComputerNotPoweredOnException;
 import org.workwattbackend.hierarchy.HierarchyRepository;
+import org.workwattbackend.messaging.MessageService;
 import org.workwattbackend.usageHistory.dto.ComputerDto;
 
 import java.time.Duration;
@@ -20,6 +21,7 @@ public class UsageHistoryService {
     private final UsageHistoryRepository historyRepository;
     private final ComputerEntityRepository computerEntityRepository;
     private final HierarchyRepository hierarchyRepository;
+    private final MessageService messageService;
 
     public Map<String, List<String>> getUserUsageHistoryChartData(LocalDateTime start, LocalDateTime stop, String userId) {
         List<String> x = new ArrayList<>();
@@ -177,6 +179,21 @@ public class UsageHistoryService {
         return result;
     }
 
+ public void startWork(ComputerDto computerDto) {
+
+        messageService.updateSupervisors(computerDto.getUserId());
+
+        UsageHistoryEntity history = UsageHistoryEntity
+            .builder()
+            .user_id(computerDto.getUserId())
+            .start(LocalDateTime.now())
+            .stop(null)
+            .computerId(computerDto.getComputerId())
+            .build();
+
+        historyRepository.save(history);
+    }
+
     public float getTodayTotalConsumption() {
         LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
         LocalDateTime endOfNow = LocalDateTime.now();
@@ -209,11 +226,6 @@ public class UsageHistoryService {
         return totalConsumption;
     }
 
-
-    public void startWork(ComputerDto computerDto) {
-        UsageHistoryEntity history = UsageHistoryEntity.builder().user_id(computerDto.getUserId()).start(LocalDateTime.now()).stop(null).computerId(computerDto.getComputerId()).build();
-        historyRepository.save(history);
-    }
 
     @Transactional
     public void endWork(Long id) {

@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.workwattbackend.messaging.Message;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -28,6 +29,8 @@ public interface UsageHistoryRepository extends JpaRepository<UsageHistoryEntity
         @Param("stop") LocalDateTime stop,
         @Param("userIds") Collection<String> userIds
     );
+
+    List<UsageHistoryEntity> findByStopIsNull();
 
     @Query("SELECT u FROM UsageHistoryEntity u WHERE u.start <= :end AND u.stop >= :start")
     List<UsageHistoryEntity> findByDateRange(
