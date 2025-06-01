@@ -34,8 +34,8 @@ public class UsageHistoryController {
     public ResponseEntity<List<UsageHistoryEntity>> getUsageHistoryForSingleUSer(@RequestParam(name = "s") String start, @RequestParam(name = "e") String end, @RequestParam(name = "u") String userId) {
         long startMilis = Long.parseLong(start);
         long stopMilis = Long.parseLong(end);
-        log.info("{} {}", startMilis, stopMilis);
         var list = usageService.getUserUsageHistory(new Date(startMilis), new Date(stopMilis), userId);
+        if (list.isEmpty()) return ResponseEntity.noContent().build();
         return ResponseEntity.ok(list);
     }
 
