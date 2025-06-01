@@ -16,4 +16,6 @@ public interface ComputerEntityRepository extends JpaRepository<ComputerEntity, 
     List<NewComputerDto> findFreeComputers();
 
     Optional<ComputerEntity> findFirstByNameAndUserIdIsNullOrderByIdAsc(String name);
+
+    Optional<ComputerEntity> findByUserId(String userId);
 }
