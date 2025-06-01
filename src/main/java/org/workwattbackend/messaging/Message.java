@@ -1,20 +1,18 @@
 package org.workwattbackend.messaging;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.workwattbackend.user.UserEntity;
 
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
-@AllArgsConstructor
 @Getter
+@Builder
 public class Message {
-    private long id;
-    private String computerName;
-    private String userId;
-    private String userFullName;
-    private LocalDateTime start;
-
+    private final String computerName;
+    private final String userId;
+    private final String userFullName;
+    private final LocalDateTime start;
 }

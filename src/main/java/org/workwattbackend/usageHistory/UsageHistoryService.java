@@ -180,12 +180,18 @@ public class UsageHistoryService {
         return result;
     }
 
-
-
     public void startWork(ComputerDto computerDto) {
-//send to web socket
-        messageService.sendUpdate(messageService.generateMessages());
-        UsageHistoryEntity history = UsageHistoryEntity.builder().user_id(computerDto.getUserId()).start(LocalDateTime.now()).stop(null).computerId(computerDto.getComputerId()).build();
+
+        messageService.updateSupervisors(computerDto.getUserId());
+
+        UsageHistoryEntity history = UsageHistoryEntity
+            .builder()
+            .user_id(computerDto.getUserId())
+            .start(LocalDateTime.now())
+            .stop(null)
+            .computerId(computerDto.getComputerId())
+            .build();
+
         historyRepository.save(history);
     }
 

@@ -30,11 +30,6 @@ public interface UsageHistoryRepository extends JpaRepository<UsageHistoryEntity
         @Param("userIds") Collection<String> userIds
     );
 
-    @Query("SELECT new org.workwattbackend.messaging.Message(u.id, c.name, CONCAT(us.firstName, ' ', us.lastName), u.start) " +
-            "FROM UsageHistoryEntity u " +
-            "JOIN ComputerEntity c ON u.computerId = c.id " +
-            "JOIN UserEntity us ON c.userId = us.id " +
-            "WHERE u.stop IS NULL")
-    List<Message> findActiveUsageInfo();
+    List<UsageHistoryEntity> findByStopIsNull();
 
 }
