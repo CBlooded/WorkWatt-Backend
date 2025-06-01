@@ -57,6 +57,7 @@ public class UserService {
         var user = repository.findById(userId).orElseThrow(UserNotFoundException::new);
         user.setPassword(encoder.encode(newPassword));
         user.setEnabled(true);
+        hostRepository.deleteByUserId(userId);
         repository.save(user);
     }
 
