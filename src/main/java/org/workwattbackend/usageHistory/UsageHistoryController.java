@@ -1,6 +1,7 @@
 package org.workwattbackend.usageHistory;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.workwattbackend.usageHistory.dto.ComputerDto;
@@ -14,6 +15,7 @@ import java.util.List;
 /**
  * The type Usage history controller.
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/usage")
 @RequiredArgsConstructor
@@ -32,7 +34,7 @@ public class UsageHistoryController {
     public ResponseEntity<List<UsageHistoryEntity>> getUsageHistoryForSingleUSer(@RequestParam(name = "s") String start, @RequestParam(name = "e") String end, @RequestParam(name = "u") String userId) {
         long startMilis = Long.parseLong(start);
         long stopMilis = Long.parseLong(end);
-
+        log.info("{} {}", startMilis, stopMilis);
         return ResponseEntity.ok(usageService.getUserUsageHistory(new Date(startMilis), new Date(stopMilis), userId));
     }
 
