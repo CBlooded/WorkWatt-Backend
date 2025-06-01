@@ -3,6 +3,7 @@ package org.workwattbackend.messaging;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.workwattbackend.computer.ComputerEntity;
 import org.workwattbackend.computer.ComputerEntityRepository;
 import org.workwattbackend.usageHistory.UsageHistoryEntity;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/usage")
 public class MessageService {
     private final UserRepository userRepository;
     private final UsageHistoryRepository usageRepository;
