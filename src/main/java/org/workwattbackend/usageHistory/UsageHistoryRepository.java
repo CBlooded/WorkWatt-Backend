@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,8 +16,8 @@ public interface UsageHistoryRepository extends JpaRepository<UsageHistoryEntity
 
     @Query("SELECT u FROM UsageHistoryEntity u WHERE u.start >= :start AND u.stop <= :stop AND u.user_id = :userId")
     List<UsageHistoryEntity> findByDateRangeAndUser(
-        @Param("start") LocalDateTime start,
-        @Param("stop") LocalDateTime stop,
+        @Param("start") Date start,
+        @Param("stop") Date stop,
         @Param("userId") String userId
     );
 }

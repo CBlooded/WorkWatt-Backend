@@ -29,8 +29,11 @@ public class UsageHistoryController {
      * @return the response entity
      */
     @GetMapping("/history")
-    public ResponseEntity<List<UsageHistoryEntity>> getUsageHistoryForSingleUSer(@RequestParam(name = "s") OffsetDateTime start, @RequestParam(name = "e") OffsetDateTime end, @RequestParam(name = "u") String userId) {
-        return ResponseEntity.ok(usageService.getUserUsageHistory(start, end, userId));
+    public ResponseEntity<List<UsageHistoryEntity>> getUsageHistoryForSingleUSer(@RequestParam(name = "s") String start, @RequestParam(name = "e") String end, @RequestParam(name = "u") String userId) {
+        long startMilis = Long.parseLong(start);
+        long stopMilis = Long.parseLong(end);
+
+        return ResponseEntity.ok(usageService.getUserUsageHistory(new Date(startMilis), new Date(startMilis), userId));
     }
 
     /**

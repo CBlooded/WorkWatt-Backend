@@ -15,8 +15,8 @@ import java.util.List;
 public class UsageHistoryService {
     private final UsageHistoryRepository historyRepository;
 
-    public List<UsageHistoryEntity> getUserUsageHistory(OffsetDateTime start, OffsetDateTime stop, String userId) {
-        return historyRepository.findByDateRangeAndUser(start.toLocalDateTime(), stop.toLocalDateTime(), userId);
+    public List<UsageHistoryEntity> getUserUsageHistory(Date start, Date stop, String userId) {
+        return historyRepository.findByDateRangeAndUser(start, stop, userId);
     }
 
 
