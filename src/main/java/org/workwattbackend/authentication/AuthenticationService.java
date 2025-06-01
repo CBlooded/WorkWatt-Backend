@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.workwattbackend.authentication.entities.AuthenticationRequest;
@@ -15,6 +16,7 @@ import org.workwattbackend.exception.AccountNotActivatedException;
 import org.workwattbackend.exception.UserAlreadyExistsException;
 import org.workwattbackend.exception.UserNotFoundException;
 import org.workwattbackend.mailing.EmailController;
+import org.workwattbackend.security.config.JwtService;
 import org.workwattbackend.user.Role;
 import org.workwattbackend.user.UserEntity;
 import org.workwattbackend.user.UserRepository;
@@ -34,6 +36,7 @@ public class AuthenticationService {
     private final PasswordEncoder encoder;
     private final EmailController emailController;
     private final UserService userService;
+    private final JwtService jwtService;
 
     /**
      * Authenticate authentication response.
@@ -57,11 +60,9 @@ public class AuthenticationService {
         );
 
 
-        /*TODO
-           generate token
-         */
+        UserDetails userDetails = userRepository.findByEmail(request.getEmail()).orElseThrow();
 
-        return AuthenticationResponse.builder().token("1234").build();
+        return AuthenticationResponse.builder().token(jwtService.generateTokenWithExtraClaims(userDetails)).build();
     }
 
     /**
