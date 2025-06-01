@@ -12,7 +12,6 @@ import java.util.*;
 @Repository
 public interface UsageHistoryRepository extends JpaRepository<UsageHistoryEntity, Long> {
     Optional<UsageHistoryEntity> findByComputerIdAndStopIsNull(Long computerId);
-    List<UsageHistoryEntity> findAllComputerIdAndStopIsNull();
 
     @Query("SELECT u FROM UsageHistoryEntity u WHERE u.start >= :start AND u.stop <= :stop AND u.user_id = :userId")
     List<UsageHistoryEntity> findByDateRangeAndUser(
