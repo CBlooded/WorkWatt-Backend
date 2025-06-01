@@ -7,6 +7,7 @@ import org.workwattbackend.usageHistory.dto.ComputerDto;
 import org.workwattbackend.user.UserRepository;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class UsageHistoryController {
      * @return the response entity
      */
     @GetMapping("/history")
-    public ResponseEntity<List<UsageHistoryEntity>> getUsageHistoryForSingleUSer(@RequestParam(name = "s") LocalDateTime start, @RequestParam(name = "e") LocalDateTime end, @RequestParam(name = "u") String userId) {
+    public ResponseEntity<List<UsageHistoryEntity>> getUsageHistoryForSingleUSer(@RequestParam(name = "s") OffsetDateTime start, @RequestParam(name = "e") OffsetDateTime end, @RequestParam(name = "u") String userId) {
         return ResponseEntity.ok(usageService.getUserUsageHistory(start, end, userId));
     }
 
