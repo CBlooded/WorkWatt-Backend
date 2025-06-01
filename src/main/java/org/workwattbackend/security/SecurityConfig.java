@@ -18,22 +18,22 @@ import org.workwattbackend.security.config.JwtAuthentication;
 public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthentication jwtAuthentication;
+
     //TODO finish
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request ->
-                        request.requestMatchers("/api/v1/auth/authenticate", "/api/v1/usage/**")
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
-
-                )
-                .sessionManagement(
-                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthentication, UsernamePasswordAuthenticationFilter.class).build();
+            .authorizeHttpRequests(request ->
+                request.requestMatchers("/api/v1/auth/authenticate", "/api/v1/usage/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated()
+            )
+            .sessionManagement(
+                session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .authenticationProvider(authenticationProvider)
+            .addFilterBefore(jwtAuthentication, UsernamePasswordAuthenticationFilter.class).build();
     }
 }
 
