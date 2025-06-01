@@ -1,5 +1,6 @@
 package org.workwattbackend.usageHistory;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.workwattbackend.computer.ComputerEntity;
@@ -184,6 +185,7 @@ public class UsageHistoryService {
         historyRepository.save(history);
     }
 
+    @Transactional
     public void endWork(Long id) {
         UsageHistoryEntity history = historyRepository.findByComputerIdAndStopIsNull(id).orElseThrow(() -> new ComputerNotPoweredOnException(id));
         history.setStop(LocalDateTime.now());

@@ -102,7 +102,7 @@ public class UsageHistoryController {
      * @param computerDto the computer dto
      * @return the response entity
      */
-    @PostMapping("/startWork")
+    @PostMapping("/desktop/startWork")
     public ResponseEntity<Void> startWork(@RequestBody ComputerDto computerDto) {
         usageService.startWork(computerDto);
         return ResponseEntity.ok().build();
@@ -114,7 +114,7 @@ public class UsageHistoryController {
      * @param computerId the computer id
      * @return the response entity
      */
-    @PostMapping("/endWork")
+    @PostMapping("/desktop/endWork")
     public ResponseEntity<Void> endWork(@RequestBody Long computerId) {
         usageService.endWork(computerId);
         return ResponseEntity.ok().build();
