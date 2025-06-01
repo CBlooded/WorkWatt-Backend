@@ -15,7 +15,7 @@ public class UsageHistoryService {
     private final UsageHistoryRepository historyRepository;
 
     public List<UsageHistoryEntity> getUserUsageHistory(LocalDateTime start, LocalDateTime stop, String userId) {
-        return historyRepository.findByStartGreaterThanEqualAndStopLessThanEqualAndUser_id(start, stop, userId);
+        return historyRepository.findByDateRangeAndUser(start, stop, userId);
     }
 
 

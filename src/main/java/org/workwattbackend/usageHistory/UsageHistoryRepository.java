@@ -1,6 +1,8 @@
 package org.workwattbackend.usageHistory;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -11,6 +13,10 @@ import java.util.Optional;
 public interface UsageHistoryRepository extends JpaRepository<UsageHistoryEntity, Long> {
     Optional<UsageHistoryEntity> findByComputerIdAndStopIsNull(Long computerId);
 
-    List<UsageHistoryEntity> findByStartGreaterThanEqualAndStopLessThanEqualAndUser_id(LocalDateTime startDate, LocalDateTime endDate, String userId);
-
+    @Query("SELECT u FROM UsageHistoryEntity u WHERE u.start >= :start AND u.stop <= :stop AND u.user_id = :userId")
+    List<UsageHistoryEntity> findByDateRangeAndUser(
+        @Param("start") LocalDateTime start,
+        @Param("stop") LocalDateTime stop,
+        @Param("userId") String userId
+    );
 }
