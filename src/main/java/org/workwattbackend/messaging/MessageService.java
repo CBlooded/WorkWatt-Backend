@@ -23,11 +23,11 @@ public class MessageService {
     private final HierarchyService hierarchyService;
 
     public void sendUpdate(Message message, String topicIndex) {
+        System.out.println();
         messagingTemplate.convertAndSend(String.format("/topic/updates/%s", topicIndex), message);
     }
 
     public void updateSupervisors(String userId) {
-        System.out.println("UPdate sSSSS");
         var listOfSupervisorsIds = hierarchyService.getAllOfUsersSupervisors(userId);
         listOfSupervisorsIds.forEach(id -> this.sendUpdate(generateMessage(userId), id));
     }
@@ -44,7 +44,6 @@ public class MessageService {
     }
 
     public Message generateMessage(String userId) {
-        System.out.println("Generate");
         String computerName = computerRepository.findByUserId(userId).orElseThrow().getName();
         var user = userRepository.findById(userId).orElseThrow();
 

@@ -30,10 +30,7 @@ public class UsageHistoryService {
 
         List<LocalDateTime> segments = divideTime(start, stop, 10);
 
-        double consumption = computerEntityRepository
-            .findByUserId(userId)
-            .orElseThrow(RuntimeException::new)
-            .getConsumption();
+        double consumption = computerEntityRepository.findByUserId(userId).orElseThrow(RuntimeException::new).getConsumption();
 
         for (int i = 0; i < segments.size() - 1; i++) {
             LocalDateTime segmentStart = segments.get(i);
@@ -99,10 +96,7 @@ public class UsageHistoryService {
                     Duration overlap = Duration.between(maxStart, minEnd);
                     long seconds = overlap.isNegative() ? 0 : overlap.getSeconds();
 
-                    double consumption = computerEntityRepository
-                        .findByUserId(userId)
-                        .map(ComputerEntity::getConsumption)
-                        .orElse(0.0);
+                    double consumption = computerEntityRepository.findByUserId(userId).map(ComputerEntity::getConsumption).orElse(0.0);
 
                     segmentTotal += seconds / 3600f * (float) consumption;
                 }
@@ -119,10 +113,7 @@ public class UsageHistoryService {
 
     public Map<String, Object> getSupervisorUsageChart(LocalDateTime start, LocalDateTime stop, String supervisorId) {
         List<LocalDateTime> segments = divideTime(start, stop, 10);
-        List<String> x = segments.stream()
-            .limit(segments.size() - 1)
-            .map(d -> d.format(DateTimeFormatter.ofPattern("dd:MM:yy")))
-            .toList();
+        List<String> x = segments.stream().limit(segments.size() - 1).map(d -> d.format(DateTimeFormatter.ofPattern("dd:MM:yy"))).toList();
 
         Set<String> userIds = getAllSubordinates(supervisorId);
         var dataList = historyRepository.findByDateRangeAndUsers(start, stop, userIds);
@@ -156,10 +147,7 @@ public class UsageHistoryService {
                     Duration overlap = Duration.between(maxStart, minEnd);
                     long seconds = overlap.isNegative() ? 0 : overlap.getSeconds();
 
-                    double consumption = computerEntityRepository
-                        .findByUserId(userId)
-                        .map(ComputerEntity::getConsumption)
-                        .orElse(0.0);
+                    double consumption = computerEntityRepository.findByUserId(userId).map(ComputerEntity::getConsumption).orElse(0.0);
 
                     float value = seconds / 3600f * (float) consumption;
                     usageThisSegment.put(userId, usageThisSegment.getOrDefault(userId, 0f) + value);
@@ -179,17 +167,11 @@ public class UsageHistoryService {
         return result;
     }
 
- public void startWork(ComputerDto computerDto) {
+    public void startWork(ComputerDto computerDto) {
 
         messageService.updateSupervisors(computerDto.getUserId());
 
-        UsageHistoryEntity history = UsageHistoryEntity
-            .builder()
-            .user_id(computerDto.getUserId())
-            .start(LocalDateTime.now())
-            .stop(null)
-            .computerId(computerDto.getComputerId())
-            .build();
+        UsageHistoryEntity history = UsageHistoryEntity.builder().user_id(computerDto.getUserId()).start(LocalDateTime.now()).stop(null).computerId(computerDto.getComputerId()).build();
 
         historyRepository.save(history);
     }
@@ -216,9 +198,7 @@ public class UsageHistoryService {
             Duration duration = Duration.between(effectiveStart, effectiveStop);
             float hours = duration.getSeconds() / 3600f;
 
-            double consumption = computerEntityRepository.findByUserId(record.getUser_id())
-                .map(ComputerEntity::getConsumption)
-                .orElse(0.0);
+            double consumption = computerEntityRepository.findByUserId(record.getUser_id()).map(ComputerEntity::getConsumption).orElse(0.0);
 
             totalConsumption += hours * (float) consumption;
         }
@@ -229,6 +209,8 @@ public class UsageHistoryService {
 
     @Transactional
     public void endWork(Long id) {
+        var userId = computerEntityRepository.findById(id).orElseThrow().getUserId();
+        messageService.updateSupervisorsDeleteMessage(userId);
         UsageHistoryEntity history = historyRepository.findByComputerIdAndStopIsNull(id).orElseThrow(() -> new ComputerNotPoweredOnException(id));
         history.setStop(LocalDateTime.now());
     }
@@ -254,8 +236,7 @@ public class UsageHistoryService {
     private List<LocalDateTime> divideTime(LocalDateTime startDate, LocalDateTime endDate, int parts) {
         List<LocalDateTime> points = new ArrayList<>();
 
-        if (startDate.isAfter(endDate))
-            return new ArrayList<>();
+        if (startDate.isAfter(endDate)) return new ArrayList<>();
 
 
         Duration totalDuration = Duration.between(startDate, endDate);
