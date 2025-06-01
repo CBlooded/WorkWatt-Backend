@@ -1,15 +1,26 @@
 # WorkWatt-Backend
 
-## Endpoints:
+WorkWatt-Backend to aplikacja serwerowa zbudowana w technologii Java Spring Boot. Obsługuje rejestrację użytkowników, uwierzytelnianie, zarządzanie hasłami i tokenami aktywacyjnymi.
 
-### Authentication:
+## 🔧 Technologie
 
-### 1. `POST /api/v1/auth/authenticate`
+- Java 17
+- Spring Boot
+- Spring Security
+- Maven
+- JWT (JSON Web Token)
+- REST API
 
-Służy do uwierzytelniania istniejącego użytkownika (logowanie).
+---
 
-#### Request body
+## 📌 Endpointy
 
+### 🔐 Autoryzacja i rejestracja
+
+#### `POST /api/v1/auth/authenticate`
+Uwierzytelnia istniejącego użytkownika.
+
+**Request Body:**
 ```json
 {
   "email": "user@example.com",
@@ -17,12 +28,20 @@ Służy do uwierzytelniania istniejącego użytkownika (logowanie).
 }
 ```
 
-### 2. `POST /api/v1/auth/register`
+**Response:**
+```json
+{
+  "accessToken": "jwt_token_here",
+  "refreshToken": "refresh_token_here"
+}
+```
 
-Służy do rejestrowania nowego użytkownika.
+---
 
-#### Request body
+#### `POST /api/v1/auth/register`
+Rejestruje nowego użytkownika.
 
+**Request Body:**
 ```json
 {
   "email": "user@example.com",
@@ -32,70 +51,79 @@ Służy do rejestrowania nowego użytkownika.
 }
 ```
 
-### Account activation:
+---
 
-### 1. `POST /api/v1/user/password/set?h=...&n=...`
+### 🔑 Resetowanie hasła i weryfikacja
 
+#### `POST /api/v1/user/password/set?h=...&n=...`
+Ustawia nowe hasło dla konta użytkownika.
+
+**Query Params:**
+- `h` – identyfikator hosta
+- `n` – token lub inny parametr bezpieczeństwa
+
+**Request Body:**
 ```json
 {
   "hostId": "a1b2c3",
-  "newPassword": "abc"
+  "newPassword": "securePassword123"
 }
 ```
 
-### 2. `GET /api/v1/user/password/host/validate?h=...&t=...`
+---
 
-```
-    Params:
-        - h: hostId [String] - id hosta aktywacji
-        - t: tempPassword [String] - hasło tymczasowe 
-```
+#### `GET /api/v1/user/password/host/validate?h=...&t=...`
+Sprawdza ważność tokena resetowania hasła.
 
-### Computer:
+**Query Params:**
+- `h` – hostId
+- `t` – token
 
-### 1. `POST /api/v1/computer/addComputers`
+---
 
-```json
-{
-  "name": "Comp1",
-  "consumption": 21.2,
-  "amount": 0
-}
-```
+## ▶️ Uruchomienie lokalne
 
-### 2. `GET /api/v1/computer/getFreeComputers`
-
-### 3. `POST /api/v1/computer/assignUser`
-
-```json
-{
-  "userId": "aaa-bbb-ccc",
-  "computerName": "Comp1"
-}
+1. Sklonuj repozytorium:
+```bash
+git clone https://github.com/CBlooded/WorkWatt-Backend.git
+cd WorkWatt-Backend
 ```
 
-### Usage Controller
-
-### 1. `GET /api/v1/usage/history?s=...&e=...&u=...`
-
-```
-Params:
-- s: String - czas startu w milisekundach (epoch millis)
-- e: String - czas końca w milisekundach (epoch millis)
-- u: String - userId (ID użytkownika)
+2. Zbuduj projekt:
+```bash
+./mvnw clean install
 ```
 
-### 2. `GET /api/v1/usage/supervisor/history?s=...&e=...&supervisor=...`
-```
-Params:
-    - s: String - czas startu w milisekundach (epoch millis)
-    - e: String - czas końca w milisekundach (epoch millis)
-    - supervisor: String - ID supervisor'a
+3. Uruchom aplikację:
+```bash
+./mvnw spring-boot:run
 ```
 
-### 3. `POST /api/v1/usage/startWork`
+Aplikacja domyślnie będzie dostępna pod adresem `http://localhost:8080`.
 
-### 4. `POST /api/v1/usage/endWork`
+---
 
-## Database diagram:
+## 📁 Struktura projektu (skrótowa)
+
+```
+src/
+├── main/
+│   ├── java/
+│   │   └── com/workwatt/
+│   │       ├── auth/
+│   │       ├── config/
+│   │       ├── user/
+│   │       └── ...
+│   └── resources/
+│       ├── application.properties
+│       └── ...
+```
+
+---
+
+## 👤 Autor
+
+Projekt stworzony przez [CBlooded](https://github.com/CBlooded).
+
+---
 
