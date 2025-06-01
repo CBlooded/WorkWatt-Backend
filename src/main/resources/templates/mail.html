@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raport</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 40px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f1f3f5;
+        }
+
+        tr:first-child {
+            background-color: #343a40;
+            color: white;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            tr {
+                margin-bottom: 15px;
+                background: none;
+                box-shadow: 0 0 5px rgba(0,0,0,0.1);
+                padding: 10px;
+                border-radius: 5px;
+                background-color: #fff;
+            }
+
+            td {
+                padding: 10px;
+                border: none;
+                position: relative;
+                padding-left: 50%;
+            }
+
+            td::before {
+                position: absolute;
+                left: 10px;
+                top: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+            }
+
+            td:nth-of-type(1)::before { content: "Id"; }
+            td:nth-of-type(2)::before { content: "Start time"; }
+            td:nth-of-type(3)::before { content: "End time"; }
+            td:nth-of-type(4)::before { content: "Duration"; }
+            td:nth-of-type(5)::before { content: "Power usage"; }
+        }
+    </style>
+</head>
+<body>
+    
+    <table>
+        <tr><td>Id</td><td>Start time</td><td>End time</td><td>Duration</td><td>Power usage</td></tr>
+        <tr><td>1</td><td>10am</td><td>10pm</td><td>10hrs</td><td>1W</td></tr>
+        <tr><td>2</td><td>10am</td><td>10pm</td><td>10hrs</td><td>1W</td></tr>
+    </table>
+
+</body>
+</html>
