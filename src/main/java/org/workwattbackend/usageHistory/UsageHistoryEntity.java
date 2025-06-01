@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -17,7 +18,7 @@ public class UsageHistoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String user_id;
-    private LocalDateTime start;
-    private LocalDateTime stop;
+    private Date start;
+    private Date stop;
     private long computerId;
 }
