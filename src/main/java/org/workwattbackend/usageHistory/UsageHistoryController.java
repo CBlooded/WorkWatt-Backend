@@ -54,7 +54,7 @@ public class UsageHistoryController {
      * @return the usage history for supervisor
      */
     @GetMapping("/supervisor/history")
-    public ResponseEntity<Map<String, List<String>>> getUsageHistoryForSupervisor(
+    public ResponseEntity<Map<String, Object>> getUsageHistoryForSupervisor(
         @RequestParam(name = "s") String start,
         @RequestParam(name = "e") String end,
         @RequestParam(name = "supervisor") String supervisorId) {
@@ -65,7 +65,28 @@ public class UsageHistoryController {
         LocalDateTime startDateTime = LocalDateTime.ofInstant(startMillis, ZoneId.systemDefault());
         LocalDateTime stopDateTime = LocalDateTime.ofInstant(stopMillis, ZoneId.systemDefault());
 
-        Map<String, List<String>> chartData = usageService.getSupervisorUsageChart(startDateTime, stopDateTime, supervisorId);
+        Map<String, Object> chartData = usageService.getSupervisorUsageChart(startDateTime, stopDateTime, supervisorId);
+
+        if (chartData == null || chartData.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(chartData);
+    }
+
+    @GetMapping("/supervisor/history/group")
+    public ResponseEntity<Map<String, List<String>>> getUsageHistoryForSupervisorGrouped(
+        @RequestParam(name = "s") String start,
+        @RequestParam(name = "e") String end,
+        @RequestParam(name = "supervisor") String supervisorId) {
+
+        Instant startMillis = Instant.ofEpochMilli(Long.parseLong(start));
+        Instant stopMillis = Instant.ofEpochMilli(Long.parseLong(end));
+
+        LocalDateTime startDateTime = LocalDateTime.ofInstant(startMillis, ZoneId.systemDefault());
+        LocalDateTime stopDateTime = LocalDateTime.ofInstant(stopMillis, ZoneId.systemDefault());
+
+        Map<String, List<String>> chartData = usageService.getSupervisorUsageChartSummed(startDateTime, stopDateTime, supervisorId);
 
         if (chartData == null || chartData.isEmpty()) {
             return ResponseEntity.noContent().build();
