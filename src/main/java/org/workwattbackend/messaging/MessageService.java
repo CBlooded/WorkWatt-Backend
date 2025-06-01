@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/usage")
 public class MessageService {
     private final UserRepository userRepository;
     private final UsageHistoryRepository usageRepository;
@@ -25,8 +24,12 @@ public class MessageService {
 
     private final SimpMessagingTemplate messagingTemplate;
 
-    public void sendUpdate(List<Message> message) {
+    public void sendUpdate(Message message) {
         messagingTemplate.convertAndSend("/topic/updates", message);
+    }
+
+    public void sendMessages(List<Message> messages) {
+        for (Message x : messages) {sendUpdate(x);}
     }
 
     public List<Message> generateMessages(){

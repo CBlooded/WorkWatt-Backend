@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class Message {
     private long id;
     private String computerName;
+    private String userId;
     private String userFullName;
     private LocalDateTime start;
 
