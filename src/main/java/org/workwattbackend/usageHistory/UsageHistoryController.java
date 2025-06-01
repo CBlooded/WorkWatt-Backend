@@ -33,7 +33,7 @@ public class UsageHistoryController {
         long startMilis = Long.parseLong(start);
         long stopMilis = Long.parseLong(end);
 
-        return ResponseEntity.ok(usageService.getUserUsageHistory(new Date(startMilis), new Date(startMilis), userId));
+        return ResponseEntity.ok(usageService.getUserUsageHistory(new Date(startMilis), new Date(stopMilis), userId));
     }
 
     /**
