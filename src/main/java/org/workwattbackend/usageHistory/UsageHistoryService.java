@@ -2,6 +2,7 @@ package org.workwattbackend.usageHistory;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.workwattbackend.computer.ComputerEntityRepository;
 import org.workwattbackend.exception.ComputerNotPoweredOnException;
 import org.workwattbackend.usageHistory.dto.ComputerDto;
 
@@ -14,6 +15,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UsageHistoryService {
     private final UsageHistoryRepository historyRepository;
+    private final ComputerEntityRepository computerEntityRepository;
 
     public Map<String, List<String>> getUserUsageHistoryChartData(LocalDateTime start, LocalDateTime stop, String userId) {
         List<String> x = new ArrayList<>();
@@ -21,6 +23,11 @@ public class UsageHistoryService {
         var dataList = historyRepository.findByDateRangeAndUser(start, stop, userId);
 
         List<LocalDateTime> segments = divideTime(start, stop, 10);
+
+        double consumption = computerEntityRepository
+            .findByUserId(userId)
+            .orElseThrow(RuntimeException::new)
+            .getConsumption();
 
         for (int i = 0; i < segments.size() - 1; i++) {
             LocalDateTime segmentStart = segments.get(i);
@@ -46,7 +53,7 @@ public class UsageHistoryService {
                 }
             }
 
-            y.add(String.valueOf(sumHours));
+            y.add(String.valueOf(sumHours * consumption));
         }
 
 
