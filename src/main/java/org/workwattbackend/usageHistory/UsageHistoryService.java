@@ -125,10 +125,8 @@ public class UsageHistoryService {
         Set<String> userIds = getAllSubordinates(supervisorId);
         var dataList = historyRepository.findByDateRangeAndUsers(start, stop, userIds);
 
-        // Map: userId -> List of values per segment
         Map<String, List<String>> usagePerUser = new HashMap<>();
 
-        // Initialize empty lists for each subordinate
         for (String userId : userIds) {
             usagePerUser.put(userId, new ArrayList<>());
         }
@@ -137,7 +135,6 @@ public class UsageHistoryService {
             LocalDateTime segmentStart = segments.get(i);
             LocalDateTime segmentEnd = segments.get(i + 1);
 
-            // Map userId -> sum usage for this segment
             Map<String, Float> usageThisSegment = new HashMap<>();
             for (String userId : userIds) {
                 usageThisSegment.put(userId, 0f);
@@ -165,7 +162,6 @@ public class UsageHistoryService {
                 }
             }
 
-            // Add the usage for each user for this segment to their list
             for (String userId : userIds) {
                 usagePerUser.get(userId).add(String.format("%.2f", usageThisSegment.get(userId)));
             }
