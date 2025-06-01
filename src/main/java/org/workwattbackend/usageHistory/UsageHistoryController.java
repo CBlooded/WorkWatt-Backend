@@ -23,7 +23,17 @@ import java.util.Map;
 @CrossOrigin
 public class UsageHistoryController {
     private final UsageHistoryService usageService;
-    private final UserService userService;
+
+
+    /**
+     * Gets total today consumption.
+     *
+     * @return the total today consumption
+     */
+    @GetMapping("/today/total")
+    public ResponseEntity<Float> getTotalTodayConsumption() {
+        return ResponseEntity.ok(usageService.getTodayTotalConsumption());
+    }
 
     /**
      * Get usage history response entity.
@@ -74,6 +84,14 @@ public class UsageHistoryController {
         return ResponseEntity.ok(chartData);
     }
 
+    /**
+     * Gets usage history for supervisor grouped.
+     *
+     * @param start        the start
+     * @param end          the end
+     * @param supervisorId the supervisor id
+     * @return the usage history for supervisor grouped
+     */
     @GetMapping("/supervisor/history/summed")
     public ResponseEntity<Map<String, List<String>>> getUsageHistoryForSupervisorGrouped(
         @RequestParam(name = "s") String start,

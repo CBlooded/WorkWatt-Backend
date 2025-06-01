@@ -127,6 +127,7 @@ public class UsageHistoryService {
 
         Map<String, List<String>> usagePerUser = new HashMap<>();
 
+        // Initialize empty lists for each subordinate
         for (String userId : userIds) {
             usagePerUser.put(userId, new ArrayList<>());
         }
@@ -135,6 +136,7 @@ public class UsageHistoryService {
             LocalDateTime segmentStart = segments.get(i);
             LocalDateTime segmentEnd = segments.get(i + 1);
 
+            // Map userId -> sum usage for this segment
             Map<String, Float> usageThisSegment = new HashMap<>();
             for (String userId : userIds) {
                 usageThisSegment.put(userId, 0f);
@@ -162,6 +164,7 @@ public class UsageHistoryService {
                 }
             }
 
+            // Add the usage for each user for this segment to their list
             for (String userId : userIds) {
                 usagePerUser.get(userId).add(String.format("%.2f", usageThisSegment.get(userId)));
             }
@@ -174,6 +177,37 @@ public class UsageHistoryService {
         return result;
     }
 
+    public float getTodayTotalConsumption() {
+        LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
+        LocalDateTime endOfNow = LocalDateTime.now();
+
+        List<UsageHistoryEntity> entries = historyRepository.findByDateRange(startOfDay, endOfNow);
+
+        float totalConsumption = 0f;
+
+        for (UsageHistoryEntity record : entries) {
+            LocalDateTime recordStart = record.getStart();
+            LocalDateTime recordStop = record.getStop();
+
+            if (recordStop == null) {
+                recordStop = endOfNow; // in-progress session
+            }
+
+            LocalDateTime effectiveStart = recordStart.isBefore(startOfDay) ? startOfDay : recordStart;
+            LocalDateTime effectiveStop = recordStop.isAfter(endOfNow) ? endOfNow : recordStop;
+
+            Duration duration = Duration.between(effectiveStart, effectiveStop);
+            float hours = duration.getSeconds() / 3600f;
+
+            double consumption = computerEntityRepository.findByUserId(record.getUser_id())
+                .map(ComputerEntity::getConsumption)
+                .orElse(0.0);
+
+            totalConsumption += hours * (float) consumption;
+        }
+
+        return totalConsumption;
+    }
 
 
     public void startWork(ComputerDto computerDto) {
