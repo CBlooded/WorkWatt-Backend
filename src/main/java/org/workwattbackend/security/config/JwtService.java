@@ -1,8 +1,6 @@
 package org.workwattbackend.security.config;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,27 +53,43 @@ public class JwtService {
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts
-                .builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
+            .builder()
+            .setClaims(extraClaims)
+            .setSubject(userDetails.getUsername())
+            .setIssuedAt(new Date(System.currentTimeMillis()))
+            .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24))
+            .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+            .compact();
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String email = extractUsername(token);
-        return (email.equals(userDetails.getUsername()));
+        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    private boolean isTokenExpired(String token) {
+        return extractClaims(token, Claims::getExpiration).before(new Date());
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
+        try {
+            return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+        } catch (ExpiredJwtException e) {
+            throw new RuntimeException("Token expired", e);
+        } catch (MalformedJwtException e) {
+            throw new RuntimeException("Invalid JWT token", e);
+        } catch (UnsupportedJwtException e) {
+            throw new RuntimeException("Unsupported JWT token", e);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("JWT claims string is empty", e);
+        } catch (JwtException e) {
+            throw new RuntimeException("JWT error: " + e.getMessage(), e);
+        }
     }
 
     private Key getSignInKey() {

@@ -46,6 +46,11 @@ public class UserService {
         this.sentAccountConfirmationMail(temporaryPassword, host);
     }
 
+    public String getUserFirstAndLAstNameById(String userId) {
+        var user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        return user.getFirstName() + " " + user.getLastName();
+    }
+
 
     /**
      * Change password and activate.

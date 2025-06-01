@@ -127,7 +127,6 @@ public class UsageHistoryService {
         Set<String> userIds = getAllSubordinates(supervisorId);
         var dataList = historyRepository.findByDateRangeAndUsers(start, stop, userIds);
 
-        // Map: userId -> List of values per segment
         Map<String, List<String>> usagePerUser = new HashMap<>();
 
         // Initialize empty lists for each subordinate
@@ -180,7 +179,7 @@ public class UsageHistoryService {
         return result;
     }
 
-    public void startWork(ComputerDto computerDto) {
+ public void startWork(ComputerDto computerDto) {
 
         messageService.updateSupervisors(computerDto.getUserId());
 
@@ -194,6 +193,39 @@ public class UsageHistoryService {
 
         historyRepository.save(history);
     }
+
+    public float getTodayTotalConsumption() {
+        LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
+        LocalDateTime endOfNow = LocalDateTime.now();
+
+        List<UsageHistoryEntity> entries = historyRepository.findByDateRange(startOfDay, endOfNow);
+
+        float totalConsumption = 0f;
+
+        for (UsageHistoryEntity record : entries) {
+            LocalDateTime recordStart = record.getStart();
+            LocalDateTime recordStop = record.getStop();
+
+            if (recordStop == null) {
+                recordStop = endOfNow; // in-progress session
+            }
+
+            LocalDateTime effectiveStart = recordStart.isBefore(startOfDay) ? startOfDay : recordStart;
+            LocalDateTime effectiveStop = recordStop.isAfter(endOfNow) ? endOfNow : recordStop;
+
+            Duration duration = Duration.between(effectiveStart, effectiveStop);
+            float hours = duration.getSeconds() / 3600f;
+
+            double consumption = computerEntityRepository.findByUserId(record.getUser_id())
+                .map(ComputerEntity::getConsumption)
+                .orElse(0.0);
+
+            totalConsumption += hours * (float) consumption;
+        }
+
+        return totalConsumption;
+    }
+
 
     @Transactional
     public void endWork(Long id) {

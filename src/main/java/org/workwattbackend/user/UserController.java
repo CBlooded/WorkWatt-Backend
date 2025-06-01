@@ -20,6 +20,13 @@ import java.util.Objects;
 public class UserController {
     private final UserService service;
 
+
+    @GetMapping("/name")
+    public ResponseEntity<String> getUser(@RequestParam(name = "u") String userId) {
+        return ResponseEntity.ok(service.getUserFirstAndLAstNameById(userId));
+    }
+
+
     /**
      * Sets user password and activate account.
      *
@@ -44,11 +51,9 @@ public class UserController {
      */
     @GetMapping("/password/host/validate")
     public ResponseEntity<Void> validateActivationHost(@RequestParam(name = "h") String hostId, @RequestParam(name = "t") String tempPassword) throws HostNotFoundException, UserNotFoundException {
-        if (!service.isHostIdValid(hostId))
-            throw new HostNotFoundException();
+        if (!service.isHostIdValid(hostId)) throw new HostNotFoundException();
         var user = service.getUserFromHostId(hostId);
-        if (!service.isTempPasswordValid(user.getId(), tempPassword))
-            throw new UserNotFoundException();
+        if (!service.isTempPasswordValid(user.getId(), tempPassword)) throw new UserNotFoundException();
         return ResponseEntity.ok().build();
     }
 }
